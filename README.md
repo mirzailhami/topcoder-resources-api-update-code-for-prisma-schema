@@ -203,3 +203,5 @@ Models are mapped from `src/models/` ([link](https://github.com/topcoder-platfor
 ---
 
 This schema consolidates the Resources API into Postgres, adhering to Prisma best practices: camelCase naming, indexes on frequently queried fields (e.g., `challengeId`, `nameLower`), and consistent audit fields per challenge requirements.
+
+Code repository: https://github.com/mirzailhami/topcoder-resources-api-update-code-for-prisma-schema
