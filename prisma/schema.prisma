@@ -1,0 +1,134 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output = "ERD.md"
+  disablePuppeteer = true
+}
+
+model Resource {
+  id            String   @id @default(uuid())
+  challengeId   String
+  memberId      String
+  memberHandle  String
+  roleId        String
+  created       DateTime @default(now())
+  createdBy     String?
+  updated       DateTime @updatedAt
+  updatedBy     String?
+
+  role          ResourceRole @relation(fields: [roleId], references: [id])
+  challenge     Challenge    @relation(fields: [challengeId], references: [id])
+
+  @@index([challengeId])
+  @@index([memberId])
+  @@index([challengeId, memberId])
+  @@index([memberId, roleId])
+}
+
+model ResourceRole {
+  id             String   @id @default(uuid())
+  name           String
+  fullReadAccess Boolean
+  fullWriteAccess Boolean
+  isActive       Boolean
+  selfObtainable Boolean
+  legacyId       Int?
+  nameLower      String
+
+  created        DateTime @default(now())
+  createdBy      String
+  updated        DateTime @updatedAt
+  updatedBy      String?
+
+  resources      Resource[]
+  phaseDependencies ResourceRolePhaseDependency[]
+
+  @@index([nameLower])
+}
+
+model ResourceRolePhaseDependency {
+  id            String   @id @default(uuid())
+  phaseId       String
+  resourceRoleId String
+  phaseState    Boolean
+  created       DateTime @default(now())
+  createdBy     String
+  updated       DateTime @updatedAt
+  updatedBy     String?
+
+  resourceRole  ResourceRole @relation(fields: [resourceRoleId], references: [id])
+  phase         Phase        @relation(fields: [phaseId], references: [id])
+
+  @@index([phaseId])
+  @@index([resourceRoleId])
+}
+
+model MemberStats {
+  userId      Int      @id
+  handle      String
+  handleLower String
+  maxRating   Json?
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedBy   String?
+  updatedAt   DateTime @updatedAt
+
+  @@index([handleLower])
+}
+
+model MemberProfile {
+  userId      Int      @id
+  handle      String
+  handleLower String
+  email       String?
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedBy   String?
+  updatedAt   DateTime @updatedAt
+
+  @@index([handleLower])
+}
+
+model Challenge {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  status      String    @default("NEW")
+  startDate   DateTime?
+  endDate     DateTime?
+  projectId   Int?
+
+  resources   Resource[]
+
+  createdAt   DateTime  @default(now())
+  createdBy     String
+  updatedAt   DateTime  @updatedAt
+  updatedBy     String
+
+  @@index([projectId])
+}
+
+model Phase {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  isOpen      Boolean   @default(false)
+  duration    Int?
+
+  phaseDependencies ResourceRolePhaseDependency[]
+
+  createdAt   DateTime  @default(now())
+  createdBy     String
+  updatedAt   DateTime  @updatedAt
+  updatedBy     String
+
+  @@unique([name])
+}
