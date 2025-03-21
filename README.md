@@ -27,66 +27,40 @@ Per forum guidance, Swagger updates are based on `src/models/` (not the obsolete
 
 #### Set Up the Environment
 
-1.  **Clone the Repository** (optional for reference):
+1.  **Prisma Init**:
 
 ```
-
-git clone https://github.com/topcoder-platform/resources-api.git
-
-cd resources-api
-
-```
-
-2.  **Create a Project Directory**:
-
-```
-
-mkdir resources-api-prisma
-
-cd resources-api-prisma
-
 npx prisma init
-
 ```
 
-3.  **Configure `.env`**:
+2.  **Configure `.env`**:
 
-Add to `resources-api-prisma/.env`:
+Add to `.env`:
 
 ```
-
 DATABASE_URL="postgresql://<username>@localhost:5432/resources_api_dev?schema=public"
-
 ```
-
 - Replace `<username>` with yours (or `postgres` if role fixed).
 
 #### Start PostgreSQL
 
-- **Install PostgreSQL** (via Homebrew on macOS):
+- **Install PostgreSQL (if dont have, yet)** (via Homebrew on macOS):
 
 ```
-
 brew install postgresql@15
-
 brew services start postgresql@15
-
 ```
 
 - **Create the Database**:
 
 ```
-
 createdb resources_api_dev # Use -U postgres if role exists
-
 ```
 
 - **Verify it’s Running**:
 
 ```
-
 ps aux | grep postgres
-
 ```
 
 Look for `/usr/local/opt/postgresql@15/bin/postgres`.
@@ -94,12 +68,10 @@ Look for `/usr/local/opt/postgresql@15/bin/postgres`.
 #### Run Prisma Migrations
 
 ```
-
 npx prisma migrate dev --name init
-
 ```
 
-Screenshot (https://monosnap.com/file/vwchihbS45wtDknrtrXeElUrHpOybk).
+Output screenshot (https://monosnap.com/file/vwchihbS45wtDknrtrXeElUrHpOybk).
 
 Applies the schema to PostgreSQL.
 
@@ -108,17 +80,13 @@ Applies the schema to PostgreSQL.
 1.  **Install Dependencies**:
 
 ```
-
 npm install @prisma/client
-
 ```
 
 2.  **Run the test.js file**:
 
 ```
-
 node test.js
-
 ```
 
 Output (https://monosnap.com/file/TiJG4I0gR8z9yJ3wjd7Cxg71uRSyVq).
@@ -126,9 +94,7 @@ Output (https://monosnap.com/file/TiJG4I0gR8z9yJ3wjd7Cxg71uRSyVq).
 #### Access Prisma Studio (Optional)
 
 ```
-
 npx prisma studio
-
 ```
 
 Open http://localhost:5555 to inspect tables (https://monosnap.com/file/wniyAcTIIbxXs3WTFbsfb6CYKh594g).
